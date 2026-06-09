@@ -53,31 +53,35 @@
     .success { color: #88ff88; margin-top: 10px; }
     .chat-container {
       display: none;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      max-width: 800px;
       background: rgba(22,12,38,0.9);
+      border-radius: 48px;
+      padding: 40px;
+      text-align: center;
     }
+    .chat-container h2 { color: white; }
+    .chat-container p { color: #cbb3ff; margin: 20px 0; font-size: 18px; }
   </style>
 </head>
 <body>
 <div id="authScreen">
   <div class="auth-box">
-    <h2 id="formTitle">🔐 Регистрация</h2>
-    <input type="text" id="name" placeholder="Имя">
-    <input type="tel" id="phone" placeholder="Телефон">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Пароль">
+    <h2 id="formTitle">🌈 Регистрация</h2>
+    <input type="text" id="regName" placeholder="Имя пользователя">
+    <input type="tel" id="regPhone" placeholder="Номер телефона">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Пароль">
     <div id="message"></div>
     <button id="submitBtn">Зарегистрироваться</button>
     <button id="toggleBtn" class="toggle">🔐 Уже есть аккаунт? Войти</button>
   </div>
 </div>
 <div id="chatScreen" class="chat-container" style="display:none">
-  <div style="padding:20px; color:white; text-align:center;">
-    <h2>✅ Вы вошли в мессенджер!</h2>
-    <p id="welcomeName"></p>
-    <button id="logoutBtn" style="width:auto; margin-top:20px;">Выйти</button>
-  </div>
+  <h2>✅ Добро пожаловать в Alicean!</h2>
+  <p id="welcomeName"></p>
+  <p>🔒 Ваш мессенджер защищён сквозным шифрованием</p>
+  <button id="logoutBtn">🚪 Выйти</button>
 </div>
 
 <script>
@@ -85,12 +89,11 @@
   
   function saveUser(user) {
     localStorage.setItem(`user_${user.id}`, JSON.stringify(user));
-    localStorage.setItem('currentUserId', user.id);
   }
   
   function getUsers() {
     let users = [];
-    for(let i=0; i<localStorage.length; i++) {
+    for(let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
       if(key && key.startsWith('user_')) {
         users.push(JSON.parse(localStorage.getItem(key)));
@@ -103,10 +106,10 @@
     if(!name || !phone || !email || !pass) return "Заполните все поля!";
     let users = getUsers();
     for(let u of users) {
-      if(u.phone === phone) return "Телефон уже занят";
-      if(u.email === email) return "Email уже занят";
+      if(u.phone === phone) return "❌ Телефон уже зарегистрирован";
+      if(u.email === email) return "❌ Email уже зарегистрирован";
     }
-    let id = Date.now() + "_" + Math.random();
+    let id = Date.now() + "_" + Math.random().toString(36).substr(2, 8);
     let user = { id, name, phone, email, password: pass };
     saveUser(user);
     return "ok";
@@ -130,7 +133,7 @@
     if(currentUser) {
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('chatScreen').style.display = 'block';
-      document.getElementById('welcomeName').innerText = `Добро пожаловать, ${currentUser.name}!`;
+      document.getElementById('welcomeName').innerText = `${currentUser.name}!`;
     } else {
       document.getElementById('authScreen').style.display = 'flex';
       document.getElementById('chatScreen').style.display = 'none';
@@ -151,74 +154,92 @@
     }
   }
   
-  document.getElementById('submitBtn').onclick = () => {
-    let msgDiv = document.getElementById('message');
+  // Элементы
+  const submitBtn = document.getElementById('submitBtn');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const msgDiv = document.getElementById('message');
+  
+  submitBtn.onclick = () => {
     if(!isLogin) {
-      let name = document.getElementById('name').value.trim();
-      let phone = document.getElementById('phone').value.trim();
-      let email = document.getElementById('email').value.trim();
-      let pass = document.getElementById('password').value.trim();
+      // Регистрация
+      let name = document.getElementById('regName').value.trim();
+      let phone = document.getElementById('regPhone').value.trim();
+      let email = document.getElementById('regEmail').value.trim();
+      let pass = document.getElementById('regPassword').value.trim();
+      
       let res = register(name, phone, email, pass);
       if(res === "ok") {
         msgDiv.className = 'success';
         msgDiv.innerText = "✅ Регистрация успешна! Теперь войдите.";
         isLogin = true;
         document.getElementById('formTitle').innerText = "🔐 Вход";
-        document.getElementById('submitBtn').innerText = "Войти";
-        document.getElementById('toggleBtn').innerText = "✨ Создать аккаунт";
-        document.getElementById('name').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('password').value = '';
+        submitBtn.innerText = "Войти";
+        toggleBtn.innerText = "✨ Создать аккаунт";
+        document.getElementById('regName').placeholder = "Телефон / Email / Имя";
+        document.getElementById('regPhone').style.display = 'none';
+        document.getElementById('regEmail').style.display = 'none';
+        document.getElementById('regName').value = '';
+        document.getElementById('regPassword').value = '';
       } else {
         msgDiv.className = 'error';
         msgDiv.innerText = res;
       }
     } else {
-      let identifier = document.getElementById('name').value.trim();
-      let pass = document.getElementById('password').value.trim();
+      // Вход
+      let identifier = document.getElementById('regName').value.trim();
+      let pass = document.getElementById('regPassword').value.trim();
+      
       if(login(identifier, pass)) {
         updateUI();
       } else {
         msgDiv.className = 'error';
-        msgDiv.innerText = "Неверные данные!";
+        msgDiv.innerText = "❌ Неверные данные!";
       }
     }
   };
   
-  document.getElementById('toggleBtn').onclick = () => {
+  toggleBtn.onclick = () => {
     isLogin = !isLogin;
-    let msgDiv = document.getElementById('message');
     msgDiv.innerText = '';
+    
     if(isLogin) {
       document.getElementById('formTitle').innerText = "🔐 Вход";
-      document.getElementById('submitBtn').innerText = "Войти";
-      document.getElementById('toggleBtn').innerText = "✨ Создать аккаунт";
-      document.getElementById('name').placeholder = "Телефон / Email / Имя";
-      document.getElementById('phone').style.display = 'none';
-      document.getElementById('email').style.display = 'none';
+      submitBtn.innerText = "Войти";
+      toggleBtn.innerText = "✨ Создать аккаунт";
+      document.getElementById('regName').placeholder = "Телефон / Email / Имя";
+      document.getElementById('regPhone').style.display = 'none';
+      document.getElementById('regEmail').style.display = 'none';
     } else {
-      document.getElementById('formTitle').innerText = "🔐 Регистрация";
-      document.getElementById('submitBtn').innerText = "Зарегистрироваться";
-      document.getElementById('toggleBtn').innerText = "🔐 Уже есть аккаунт? Войти";
-      document.getElementById('name').placeholder = "Имя";
-      document.getElementById('phone').style.display = 'block';
-      document.getElementById('email').style.display = 'block';
+      document.getElementById('formTitle').innerText = "🌈 Регистрация";
+      submitBtn.innerText = "Зарегистрироваться";
+      toggleBtn.innerText = "🔐 Уже есть аккаунт? Войти";
+      document.getElementById('regName').placeholder = "Имя пользователя";
+      document.getElementById('regPhone').style.display = 'block';
+      document.getElementById('regEmail').style.display = 'block';
     }
+    document.getElementById('regName').value = '';
+    document.getElementById('regPhone').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
   };
   
-  document.getElementById('logoutBtn').onclick = () => {
+  logoutBtn.onclick = () => {
     currentUser = null;
     localStorage.removeItem('currentUserId');
     updateUI();
     isLogin = false;
-    document.getElementById('name').placeholder = "Имя";
-    document.getElementById('phone').style.display = 'block';
-    document.getElementById('email').style.display = 'block';
-    document.getElementById('formTitle').innerText = "🔐 Регистрация";
-    document.getElementById('submitBtn').innerText = "Зарегистрироваться";
-    document.getElementById('toggleBtn').innerText = "🔐 Уже есть аккаунт? Войти";
-    document.getElementById('message').innerText = '';
+    document.getElementById('formTitle').innerText = "🌈 Регистрация";
+    submitBtn.innerText = "Зарегистрироваться";
+    toggleBtn.innerText = "🔐 Уже есть аккаунт? Войти";
+    document.getElementById('regName').placeholder = "Имя пользователя";
+    document.getElementById('regPhone').style.display = 'block';
+    document.getElementById('regEmail').style.display = 'block';
+    document.getElementById('regName').value = '';
+    document.getElementById('regPhone').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+    msgDiv.innerText = '';
   };
   
   checkSavedUser();
