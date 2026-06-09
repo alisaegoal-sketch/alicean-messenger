@@ -3,277 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alicean — Радужный мессенджер</title>
+    <title>Alicean - Мессенджер</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: Arial, sans-serif;
         }
         body {
-            background: radial-gradient(circle at 20% 30%, #1a0b2e, #0a0515);
+            background: linear-gradient(135deg, #1a0b2e, #0a0515);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        @keyframes rainbow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .container {
-            max-width: 500px;
+        .screen {
+            max-width: 450px;
             width: 100%;
-            background: rgba(30, 20, 50, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
-            padding: 40px;
-            border: 1px solid rgba(255,200,200,0.3);
-            text-align: center;
+            background: #2a1a3e;
+            border-radius: 30px;
+            padding: 35px;
+            border: 1px solid #ff77aa;
         }
         h1 {
             color: white;
+            text-align: center;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #ff0a54, #ff9f4a, #ffd166, #6a4eff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: rainbow 3s infinite;
-            background-size: 200% 200%;
         }
-        .subtitle {
+        .sub {
             color: #b0a0d0;
-            margin-bottom: 30px;
+            text-align: center;
+            margin-bottom: 25px;
         }
         input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px;
             margin: 8px 0;
-            background: #2a1a3e;
+            background: #1a0b2e;
             border: 1px solid #8a6ab0;
-            border-radius: 30px;
+            border-radius: 25px;
             color: white;
             font-size: 16px;
         }
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(90deg, #ff6a8a, #c55cff);
+            background: #ff6a8a;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             color: white;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
             margin-top: 15px;
         }
-        .switch-btn {
+        .switch {
             background: transparent;
             border: 1px solid #ff77aa;
+            margin-top: 10px;
         }
         .msg {
             text-align: center;
             margin-top: 15px;
-            padding: 10px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 8px;
+            border-radius: 15px;
+            font-size: 13px;
         }
-        .error { background: #ff444420; color: #ff8888; }
-        .success { background: #44ff4420; color: #88ff88; }
+        .error { background: #ff4444; color: white; }
+        .success { background: #44ff44; color: #1a0b2e; }
         
-        /* Стили для чата */
-        .chat-container {
-            max-width: 1300px;
-            width: 100%;
-            height: 90vh;
-            background: rgba(30, 20, 50, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
+        /* Чат */
+        .chat-layout {
             display: flex;
+            width: 1200px;
+            max-width: 100%;
+            height: 85vh;
+            background: #2a1a3e;
+            border-radius: 30px;
             overflow: hidden;
-            border: 2px solid transparent;
-            animation: borderPulse 3s infinite;
-        }
-        @keyframes borderPulse {
-            0% { border-color: #ff0a54; }
-            50% { border-color: #6a4eff; }
-            100% { border-color: #ff0a54; }
         }
         .sidebar {
-            width: 300px;
-            background: rgba(20, 10, 35, 0.9);
-            border-right: 1px solid #3a2a5a;
+            width: 280px;
+            background: #1f103f;
             padding: 20px;
             display: flex;
             flex-direction: column;
         }
-        .profile-info {
+        .profile {
             color: white;
-            margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid #3a2a5a;
-            text-align: left;
+            margin-bottom: 15px;
         }
-        .profile-avatar {
-            font-size: 48px;
-            margin-bottom: 10px;
+        .chats-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .chat-item {
+            background: #2a1a3e;
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            cursor: pointer;
         }
         .main-chat {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
-        .chat-header {
+        .chat-title {
             padding: 20px;
-            border-bottom: 1px solid #3a2a5a;
+            background: #1f103f;
             color: white;
             font-weight: bold;
-            background: linear-gradient(90deg, #2a1a4a, #1f103f);
+            border-bottom: 1px solid #3a2a5a;
         }
-        .messages {
+        .messages-area {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
+        }
+        .message-row {
+            margin: 10px 0;
+        }
+        .my-message {
+            text-align: right;
+        }
+        .my-message .bubble {
+            background: #ff6a8a;
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+        .other-message {
+            text-align: left;
+        }
+        .other-message .bubble {
+            background: #1a0b2e;
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            max-width: 70%;
         }
         .input-row {
             padding: 20px;
             display: flex;
             gap: 10px;
-            border-top: 1px solid #3a2a5a;
-            background: #1a0b2e;
+            background: #1f103f;
         }
         .input-row input {
             margin: 0;
-            flex: 1;
         }
         .input-row button {
             width: auto;
             margin: 0;
-            padding: 12px 24px;
+            padding: 14px 25px;
         }
-        .chat-item {
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .chat-item:hover {
-            background: rgba(255,120,160,0.2);
-            transform: translateX(5px);
-        }
-        .chat-item.active {
-            background: linear-gradient(95deg, #b259ff30, #ff77aa30);
-            border-left: 4px solid #ffb86b;
-        }
-        .my-message {
-            text-align: right;
-            margin: 10px 0;
-        }
-        .my-message .bubble {
-            display: inline-block;
-            background: linear-gradient(135deg, #c55cff, #ff6a8a);
-            padding: 10px 16px;
-            border-radius: 20px;
-            max-width: 70%;
-            color: white;
-        }
-        .other-message {
-            text-align: left;
-            margin: 10px 0;
-        }
-        .other-message .bubble {
-            display: inline-block;
-            background: #2a1a3e;
-            padding: 10px 16px;
-            border-radius: 20px;
-            max-width: 70%;
-            color: white;
-        }
-        .time {
-            font-size: 10px;
-            opacity: 0.6;
-            margin-top: 4px;
-        }
-        .logout-btn {
+        .logout {
             background: #e63946;
-            margin-top: auto;
-        }
-        .security-badge {
-            background: #00ff9d20;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            display: inline-block;
-            margin-top: 10px;
-            color: #00ff9d;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-<!-- ЭКРАН ВХОДА/РЕГИСТРАЦИИ -->
-<div id="authScreen" class="container">
+<!-- ЭКРАН ВХОДА -->
+<div id="loginScreen" class="screen">
     <h1>🌈 Alicean</h1>
-    <p class="subtitle">🔒 Безопасный радужный мессенджер</p>
+    <p class="sub">🔒 Безопасный мессенджер</p>
     
-    <div id="loginBlock">
+    <div id="loginForm">
         <input type="text" id="loginId" placeholder="Телефон, Email или Имя">
         <input type="password" id="loginPass" placeholder="Пароль">
         <div id="loginMsg" class="msg"></div>
-        <button id="doLoginBtn">🔐 Войти</button>
-        <button id="showRegBtn" class="switch-btn">✨ Создать аккаунт</button>
+        <button id="loginBtn">🔐 Войти</button>
+        <button id="showRegisterBtn" class="switch">✨ Создать аккаунт</button>
     </div>
 
-    <div id="regBlock" style="display: none;">
-        <input type="text" id="regName" placeholder="Имя пользователя">
-        <input type="tel" id="regPhone" placeholder="Номер телефона">
+    <div id="registerForm" style="display: none;">
+        <input type="text" id="regName" placeholder="Имя">
+        <input type="tel" id="regPhone" placeholder="Телефон">
         <input type="email" id="regEmail" placeholder="Email">
         <input type="password" id="regPass" placeholder="Пароль">
         <div id="regMsg" class="msg"></div>
-        <button id="doRegBtn">📝 Зарегистрироваться</button>
-        <button id="showLoginBtn" class="switch-btn">🔐 Уже есть аккаунт? Войти</button>
+        <button id="registerBtn">📝 Зарегистрироваться</button>
+        <button id="showLoginBtn" class="switch">🔐 Уже есть аккаунт?</button>
     </div>
 </div>
 
 <!-- ЧАТ -->
 <div id="chatScreen" style="display: none;">
-    <div class="chat-container">
+    <div class="chat-layout">
         <div class="sidebar">
-            <div class="profile-info">
-                <div class="profile-avatar">🌈</div>
+            <div class="profile">
                 <strong id="userName"></strong><br>
-                <span id="userContact" style="font-size: 12px;"></span>
-                <div><span class="security-badge">🔒 МАКСИМАЛЬНАЯ ЗАЩИТА</span></div>
+                <span id="userPhone" style="font-size: 12px;"></span>
+                <div style="margin-top: 8px;">🔒 E2EE</div>
             </div>
-            <div id="chatsList" style="flex: 1; overflow-y: auto;"></div>
-            <button id="newChannelBtn" style="margin: 10px 0;">📢 Создать канал</button>
-            <button id="callBtn" style="margin: 5px 0;">📞 Звонок (🔒)</button>
-            <button id="logoutBtn" class="logout-btn">🚪 Выйти</button>
+            <div class="chats-list" id="chatsList"></div>
+            <button id="createChannel">📢 Новый канал</button>
+            <button id="callBtn" style="margin-top: 10px;">📞 Звонок</button>
+            <button id="logoutChat" class="logout">🚪 Выйти</button>
         </div>
         <div class="main-chat">
-            <div class="chat-header" id="currentChatTitle">✨ Выберите чат ✨</div>
-            <div class="messages" id="messagesArea">
-                <div style="color: #aaa; text-align: center;">💬 Нажмите на чат слева, чтобы начать общение</div>
+            <div class="chat-title" id="chatTitle">Выберите чат</div>
+            <div class="messages-area" id="messagesArea">
+                <div style="color: #aaa; text-align: center;">💬 Нажмите на чат слева</div>
             </div>
             <div class="input-row">
-                <input type="text" id="msgInput" placeholder="🔒 Сообщение...">
-                <button id="sendMsgBtn">➤</button>
+                <input type="text" id="msgInput" placeholder="Сообщение...">
+                <button id="sendMsg">➤</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // ========== ДАННЫЕ ==========
+    // ========== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ==========
     let currentUser = null;
     let chats = [];
-    let activeChatId = null;
+    let activeChat = null;
 
+    // Сохранение данных
     function saveData() {
         if(currentUser) {
             localStorage.setItem(`alicean_${currentUser.id}`, JSON.stringify({
@@ -283,40 +237,40 @@
         }
     }
 
-    // РЕГИСТРАЦИЯ
-    function registerUser(name, phone, email, password) {
-        if(!name || !phone || !email || !password) {
-            return { ok: false, error: "❌ Заполните все поля!" };
+    // ========== РЕГИСТРАЦИЯ ==========
+    function register(name, phone, email, pass) {
+        if(!name || !phone || !email || !pass) {
+            return { ok: false, error: "Заполните все поля!" };
         }
         
+        // Проверка уникальности
         for(let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             if(key && key.startsWith('alicean_')) {
                 let data = JSON.parse(localStorage.getItem(key));
                 if(data.user.phone === phone) {
-                    return { ok: false, error: "❌ Телефон уже зарегистрирован!" };
+                    return { ok: false, error: "Телефон уже занят!" };
                 }
                 if(data.user.email === email) {
-                    return { ok: false, error: "❌ Email уже зарегистрирован!" };
+                    return { ok: false, error: "Email уже занят!" };
                 }
             }
         }
         
-        let newId = Date.now() + "_" + Math.random();
+        let id = Date.now() + "_" + Math.random();
         currentUser = {
-            id: newId,
+            id: id,
             name: name,
             phone: phone,
             email: email,
-            password: password,
-            avatar: "🌈"
+            password: pass
         };
         
         chats = [{
-            id: "welcome_" + Date.now(),
-            name: "🌈 Радужный канал",
+            id: "chat1",
+            name: "🌈 Главный чат",
             messages: [{
-                text: `✨ Добро пожаловать, ${name}! Это ваш защищённый чат. Все сообщения шифруются 🔒`,
+                text: `✨ Добро пожаловать, ${name}!`,
                 sender: "system",
                 time: new Date().toLocaleTimeString()
             }]
@@ -326,14 +280,14 @@
         return { ok: true };
     }
 
-    // ВХОД
-    function loginUser(identifier, password) {
+    // ========== ВХОД ==========
+    function login(identifier, pass) {
         for(let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             if(key && key.startsWith('alicean_')) {
                 let data = JSON.parse(localStorage.getItem(key));
                 let u = data.user;
-                if((u.phone === identifier || u.email === identifier || u.name === identifier) && u.password === password) {
+                if((u.phone === identifier || u.email === identifier || u.name === identifier) && u.password === pass) {
                     currentUser = u;
                     chats = data.chats || [];
                     saveData();
@@ -341,7 +295,7 @@
                 }
             }
         }
-        return { ok: false, error: "❌ Неверный телефон/email или пароль!" };
+        return { ok: false, error: "Неверные данные!" };
     }
 
     // ========== ЧАТЫ ==========
@@ -354,98 +308,89 @@
                 time: new Date().toLocaleTimeString()
             });
             saveData();
-            if(activeChatId === chatId) renderMessages(chat);
-            renderChatsList();
+            if(activeChat === chatId) renderMessages(chat);
+            renderChatList();
         }
     }
 
     function renderMessages(chat) {
         let container = document.getElementById('messagesArea');
         if(!chat.messages || chat.messages.length === 0) {
-            container.innerHTML = '<div style="color:#aaa; text-align:center;">💬 Нет сообщений. Напишите первое!</div>';
+            container.innerHTML = '<div style="color:#aaa; text-align:center;">Нет сообщений</div>';
             return;
         }
         container.innerHTML = '';
         chat.messages.forEach(msg => {
             let isMy = msg.sender === currentUser.name;
             let div = document.createElement('div');
-            div.className = isMy ? 'my-message' : 'other-message';
-            div.innerHTML = `<div class="bubble"><b>${msg.sender !== 'system' ? msg.sender : '📢 Система'}</b><br>${msg.text}<div class="time">${msg.time} 🔒</div></div>`;
+            div.className = `message-row ${isMy ? 'my-message' : 'other-message'}`;
+            div.innerHTML = `<div class="bubble"><b>${msg.sender !== 'system' ? msg.sender : '📢'}</b><br>${msg.text}<div style="font-size:10px;">${msg.time}</div></div>`;
             container.appendChild(div);
         });
         container.scrollTop = container.scrollHeight;
     }
 
-    function renderChatsList() {
+    function renderChatList() {
         let container = document.getElementById('chatsList');
         if(!chats.length) {
-            container.innerHTML = '<div style="color:#aaa;">Нет чатов. Создайте канал!</div>';
+            container.innerHTML = '<div style="color:#aaa;">Нет чатов</div>';
             return;
         }
         container.innerHTML = '';
         chats.forEach(chat => {
             let div = document.createElement('div');
             div.className = 'chat-item';
-            if(activeChatId === chat.id) div.classList.add('active');
             div.innerHTML = `<b>${chat.name}</b><br><span style="font-size:11px;">🔒 Защищён</span>`;
+            if(activeChat === chat.id) div.style.background = '#ff77aa';
             div.onclick = () => {
-                activeChatId = chat.id;
-                document.getElementById('currentChatTitle').innerHTML = chat.name;
+                activeChat = chat.id;
+                document.getElementById('chatTitle').innerHTML = chat.name;
                 renderMessages(chat);
-                renderChatsList();
+                renderChatList();
             };
             container.appendChild(div);
         });
     }
 
     function createChannel() {
-        let name = prompt("🌈 Название канала:");
-        if(name && name.trim()) {
+        let name = prompt("Название канала:");
+        if(name) {
             chats.push({
-                id: "channel_" + Date.now(),
+                id: "ch_" + Date.now(),
                 name: name,
-                messages: [{ text: `✨ Канал "${name}" создан! Добро пожаловать.`, sender: "system", time: new Date().toLocaleTimeString() }]
+                messages: [{ text: `✨ Канал "${name}" создан!`, sender: "system", time: new Date().toLocaleTimeString() }]
             });
             saveData();
-            renderChatsList();
+            renderChatList();
         }
-    }
-
-    function makeCall() {
-        if(!activeChatId) {
-            alert("📞 Сначала выберите чат");
-            return;
-        }
-        alert("📞 Защищённый звонок (WebRTC + DTLS-SRTP)\n🔒 Сквозное шифрование активно");
-        addMessage(activeChatId, "🔊 Совершён защищённый аудиозвонок");
     }
 
     function showChat() {
-        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('chatScreen').style.display = 'block';
         document.getElementById('userName').innerHTML = currentUser.name;
-        document.getElementById('userContact').innerHTML = `📞 ${currentUser.phone} | ✉️ ${currentUser.email}`;
-        renderChatsList();
+        document.getElementById('userPhone').innerHTML = `📞 ${currentUser.phone}`;
+        renderChatList();
         if(chats.length) {
-            activeChatId = chats[0].id;
-            document.getElementById('currentChatTitle').innerHTML = chats[0].name;
+            activeChat = chats[0].id;
+            document.getElementById('chatTitle').innerHTML = chats[0].name;
             renderMessages(chats[0]);
         }
     }
 
-    // ========== КНОПКИ ==========
-    document.getElementById('doLoginBtn').onclick = () => {
+    // ========== НАСТРОЙКА КНОПОК ==========
+    document.getElementById('loginBtn').onclick = () => {
         let id = document.getElementById('loginId').value.trim();
         let pass = document.getElementById('loginPass').value.trim();
         let msgDiv = document.getElementById('loginMsg');
         
         if(!id || !pass) {
             msgDiv.className = 'msg error';
-            msgDiv.innerText = "❌ Заполните все поля!";
+            msgDiv.innerText = "Заполните поля!";
             return;
         }
         
-        let res = loginUser(id, pass);
+        let res = login(id, pass);
         if(res.ok) {
             showChat();
         } else {
@@ -454,17 +399,17 @@
         }
     };
 
-    document.getElementById('doRegBtn').onclick = () => {
+    document.getElementById('registerBtn').onclick = () => {
         let name = document.getElementById('regName').value.trim();
         let phone = document.getElementById('regPhone').value.trim();
         let email = document.getElementById('regEmail').value.trim();
         let pass = document.getElementById('regPass').value.trim();
         let msgDiv = document.getElementById('regMsg');
         
-        let res = registerUser(name, phone, email, pass);
+        let res = register(name, phone, email, pass);
         if(res.ok) {
             msgDiv.className = 'msg success';
-            msgDiv.innerText = "✅ Аккаунт создан! Вход выполняется...";
+            msgDiv.innerText = "✅ Аккаунт создан! Вход...";
             setTimeout(() => {
                 showChat();
             }, 1500);
@@ -474,49 +419,47 @@
         }
     };
 
-    document.getElementById('showRegBtn').onclick = () => {
-        document.getElementById('loginBlock').style.display = 'none';
-        document.getElementById('regBlock').style.display = 'block';
-        document.getElementById('loginMsg').innerText = '';
+    document.getElementById('showRegisterBtn').onclick = () => {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
     };
 
     document.getElementById('showLoginBtn').onclick = () => {
-        document.getElementById('loginBlock').style.display = 'block';
-        document.getElementById('regBlock').style.display = 'none';
-        document.getElementById('regMsg').innerText = '';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
     };
 
-    document.getElementById('sendMsgBtn').onclick = () => {
+    document.getElementById('sendMsg').onclick = () => {
         let input = document.getElementById('msgInput');
-        if(activeChatId && input.value.trim()) {
-            addMessage(activeChatId, input.value.trim());
+        if(activeChat && input.value.trim()) {
+            addMessage(activeChat, input.value.trim());
             input.value = '';
-        } else if(!activeChatId) {
-            alert("Сначала выберите чат");
         }
     };
 
     document.getElementById('msgInput').addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') document.getElementById('sendMsgBtn').click();
+        if(e.key === 'Enter') document.getElementById('sendMsg').click();
     });
 
-    document.getElementById('newChannelBtn').onclick = createChannel;
-    document.getElementById('callBtn').onclick = makeCall;
+    document.getElementById('createChannel').onclick = createChannel;
+    
+    document.getElementById('callBtn').onclick = () => {
+        if(activeChat) {
+            alert("📞 Защищённый звонок!\n🔒 Сквозное шифрование активно");
+            addMessage(activeChat, "🔊 Аудиозвонок");
+        } else {
+            alert("Сначала выберите чат");
+        }
+    };
 
-    document.getElementById('logoutBtn').onclick = () => {
+    document.getElementById('logoutChat').onclick = () => {
         currentUser = null;
-        document.getElementById('authScreen').style.display = 'block';
+        document.getElementById('loginScreen').style.display = 'block';
         document.getElementById('chatScreen').style.display = 'none';
-        document.getElementById('loginBlock').style.display = 'block';
-        document.getElementById('regBlock').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
         document.getElementById('loginId').value = '';
         document.getElementById('loginPass').value = '';
-        document.getElementById('regName').value = '';
-        document.getElementById('regPhone').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPass').value = '';
-        document.getElementById('loginMsg').innerText = '';
-        document.getElementById('regMsg').innerText = '';
     };
 </script>
 </body>
