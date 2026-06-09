@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
         }
 
         body {
@@ -21,15 +21,13 @@
             padding: 10px;
         }
 
-        /* Радужная анимация */
         @keyframes rainbow {
             0% { border-color: #ff0a54; box-shadow: 0 0 5px #ff0a54; }
             50% { border-color: #6a4eff; box-shadow: 0 0 20px #6a4eff; }
             100% { border-color: #ff0a54; box-shadow: 0 0 5px #ff0a54; }
         }
 
-        /* Экран входа */
-        .auth-container {
+        .auth-box {
             max-width: 400px;
             width: 100%;
             background: rgba(30, 20, 50, 0.95);
@@ -54,7 +52,6 @@
             text-align: center;
             color: #b0a0d0;
             margin-bottom: 25px;
-            font-size: 14px;
         }
 
         input {
@@ -66,7 +63,6 @@
             border-radius: 30px;
             color: white;
             font-size: 14px;
-            outline: none;
         }
 
         button {
@@ -79,7 +75,6 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 12px;
-            font-size: 15px;
         }
 
         .btn-outline {
@@ -136,7 +131,6 @@
             justify-content: center;
             font-size: 26px;
             margin: 0 auto 8px;
-            overflow: hidden;
         }
         .profile-name { color: white; font-weight: bold; font-size: 14px; }
         .profile-phone { color: #b0a0d0; font-size: 10px; }
@@ -148,7 +142,6 @@
             border: 1px solid #ff77aa;
             border-radius: 25px;
             color: white;
-            font-size: 12px;
         }
         .search-results {
             max-height: 150px;
@@ -205,9 +198,9 @@
             padding: 15px;
         }
         .my-msg { text-align: right; margin: 8px 0; }
-        .my-msg .bubble { background: #ff6a8a; display: inline-block; padding: 8px 15px; border-radius: 18px; max-width: 70%; font-size: 13px; }
+        .my-msg .bubble { background: #ff6a8a; display: inline-block; padding: 8px 15px; border-radius: 18px; max-width: 70%; }
         .other-msg { text-align: left; margin: 8px 0; }
-        .other-msg .bubble { background: #3a2a5a; display: inline-block; padding: 8px 15px; border-radius: 18px; max-width: 70%; font-size: 13px; }
+        .other-msg .bubble { background: #3a2a5a; display: inline-block; padding: 8px 15px; border-radius: 18px; max-width: 70%; }
         .time { font-size: 9px; opacity: 0.6; margin-top: 3px; }
 
         .input-row {
@@ -224,7 +217,6 @@
         .small-btns { display: flex; gap: 6px; padding: 8px; flex-wrap: wrap; }
         .small-btns button { margin: 0; padding: 6px; font-size: 10px; flex: 1; }
 
-        /* Модалка настроек */
         .modal {
             position: fixed;
             top: 0;
@@ -255,24 +247,19 @@
             align-items: center;
             justify-content: center;
             font-size: 35px;
-            overflow: hidden;
         }
         .avatar-emojis { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
         .avatar-emojis span { font-size: 28px; cursor: pointer; padding: 5px; background: #1a0b2e; border-radius: 50%; }
-        .modal-box input { font-size: 13px; padding: 10px; }
 
         @media (max-width: 600px) {
             .sidebar { width: 200px; }
-            .profile-name { font-size: 11px; }
-            .chat-name { font-size: 11px; }
-            .my-msg .bubble, .other-msg .bubble { font-size: 12px; max-width: 85%; }
         }
     </style>
 </head>
 <body>
 
-<!-- ЭКРАН ВХОДА -->
-<div id="authPage" class="auth-container">
+<!-- ВХОД -->
+<div id="authPage" class="auth-box">
     <h1>🌈 Alicean</h1>
     <p class="sub">🔒 Безопасный радужный мессенджер</p>
     
@@ -280,8 +267,8 @@
         <input type="text" id="loginId" placeholder="Телефон или Email">
         <input type="password" id="loginPass" placeholder="Пароль">
         <div id="loginMsg" class="msg hidden"></div>
-        <button id="loginButton">🔐 Войти</button>
-        <button id="toRegButton" class="btn-outline">✨ Создать аккаунт</button>
+        <button id="loginBtn">🔐 Войти</button>
+        <button id="toRegBtn" class="btn-outline">✨ Создать аккаунт</button>
     </div>
 
     <div id="regPanel" class="hidden">
@@ -290,12 +277,12 @@
         <input type="email" id="regEmail" placeholder="Email">
         <input type="password" id="regPass" placeholder="Пароль">
         <div id="regMsg" class="msg hidden"></div>
-        <button id="regButton">📝 Зарегистрироваться</button>
-        <button id="toLoginButton" class="btn-outline">🔐 Уже есть аккаунт?</button>
+        <button id="regBtn">📝 Зарегистрироваться</button>
+        <button id="toLoginBtn" class="btn-outline">🔐 Уже есть аккаунт?</button>
     </div>
 </div>
 
-<!-- ЭКРАН ЧАТА -->
+<!-- ЧАТ -->
 <div id="chatPage" style="display: none;">
     <div class="chat-container">
         <div class="sidebar">
@@ -308,48 +295,54 @@
             <div id="searchResult" class="search-results"></div>
             <div class="chats-area" id="chatsContainer"></div>
             <div class="small-btns">
-                <button id="newChannel">📢 Канал</button>
-                <button id="callNow">📞 Звонок</button>
-                <button id="sendGift">🎁 Подарок</button>
+                <button id="newChannelBtn">📢 Канал</button>
+                <button id="callBtn">📞 Звонок</button>
+                <button id="giftBtn">🎁 Подарок</button>
             </div>
-            <button id="exitButton" class="btn-red">🚪 Выйти</button>
+            <button id="exitBtn" class="btn-red">🚪 Выйти</button>
         </div>
         <div class="main-chat">
             <div class="chat-header" id="chatTitle">Выберите чат</div>
             <div class="messages" id="msgList"></div>
             <div class="input-row">
                 <input type="text" id="msgField" placeholder="Сообщение...">
-                <button id="sendMsg">➤</button>
+                <button id="sendMsgBtn">➤</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // ========== ДАННЫЕ ==========
     let currentUser = null;
     let allChats = [];
-    let activeChatId = null;
-    let allPeople = [];
+    let activeChat = null;
+    let allUsers = [];
 
-    function saveData() {
-        if(currentUser) localStorage.setItem('am_' + currentUser.id, JSON.stringify({ user: currentUser, chats: allChats }));
+    // СОХРАНЕНИЕ
+    function save() {
+        if(currentUser) {
+            localStorage.setItem('am_' + currentUser.id, JSON.stringify({ user: currentUser, chats: allChats }));
+        }
     }
 
-    function loadPeople() {
-        allPeople = [];
+    // ЗАГРУЗКА ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
+    function loadAllUsers() {
+        allUsers = [];
         for(let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             if(key && key.startsWith('am_') && (!currentUser || key !== 'am_' + currentUser.id)) {
                 try {
                     let data = JSON.parse(localStorage.getItem(key));
-                    if(data.user) allPeople.push(data.user);
+                    if(data.user) allUsers.push(data.user);
                 } catch(e) {}
             }
         }
     }
 
-    function registerUser(name, phone, email, pass) {
-        if(!name || !phone || !email || !pass) return 'Заполните все поля!';
+    // РЕГИСТРАЦИЯ
+    function register(name, phone, email, pass) {
+        if(!name || !phone || !email || !pass) return 'Заполните поля!';
         for(let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             if(key && key.startsWith('am_')) {
@@ -361,21 +354,22 @@
         let id = Date.now() + '_' + Math.random();
         currentUser = { id: id, name: name, phone: phone, email: email, password: pass, avatar: '🌈' };
         allChats = [{ id: 'main', name: '🌈 Общий чат', messages: [{ text: 'Добро пожаловать, ' + name + '!', sender: 'system', time: new Date().toLocaleTimeString() }] }];
-        saveData();
+        save();
         return 'ok';
     }
 
-    function loginUser(loginId, pass) {
+    // ВХОД
+    function login(identifier, pass) {
         for(let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             if(key && key.startsWith('am_')) {
                 let data = JSON.parse(localStorage.getItem(key));
                 let u = data.user;
-                if((u.phone === loginId || u.email === loginId || u.name === loginId) && u.password === pass) {
+                if((u.phone === identifier || u.email === identifier || u.name === identifier) && u.password === pass) {
                     currentUser = u;
                     allChats = data.chats || [];
                     if(!currentUser.avatar) currentUser.avatar = '🌈';
-                    saveData();
+                    save();
                     return true;
                 }
             }
@@ -383,49 +377,53 @@
         return false;
     }
 
-    function findUsers(q) {
-        if(!q.trim()) return [];
-        q = q.toLowerCase();
-        return allPeople.filter(p => p.name.toLowerCase().includes(q) || p.phone.includes(q) || p.email.toLowerCase().includes(q));
+    // ПОИСК
+    function findUsers(query) {
+        if(!query.trim()) return [];
+        let q = query.toLowerCase();
+        return allUsers.filter(u => u.name.toLowerCase().includes(q) || u.phone.includes(q) || u.email.toLowerCase().includes(q));
     }
 
-    function startPrivateChat(person) {
-        let existing = allChats.find(c => c.type === 'private' && c.participants && c.participants.includes(currentUser.id) && c.participants.includes(person.id));
+    // СОЗДАНИЕ ЛИЧНОГО ЧАТА
+    function createPrivateChat(other) {
+        let existing = allChats.find(c => c.type === 'private' && c.participants && c.participants.includes(currentUser.id) && c.participants.includes(other.id));
         if(existing) {
-            activeChatId = existing.id;
+            activeChat = existing.id;
             document.getElementById('chatTitle').innerHTML = existing.name;
-            showMessages(existing);
-            renderChatsList();
+            renderMessages(existing);
+            renderChats();
             return;
         }
         let newChat = {
             id: 'priv_' + Date.now(),
-            name: person.name,
+            name: other.name,
             type: 'private',
-            participants: [currentUser.id, person.id],
-            messages: [{ text: '🔒 Чат с ' + person.name + ' защищён!', sender: 'system', time: new Date().toLocaleTimeString() }]
+            participants: [currentUser.id, other.id],
+            messages: [{ text: '🔒 Чат с ' + other.name + ' защищён!', sender: 'system', time: new Date().toLocaleTimeString() }]
         };
         allChats.push(newChat);
-        saveData();
-        renderChatsList();
-        activeChatId = newChat.id;
+        save();
+        renderChats();
+        activeChat = newChat.id;
         document.getElementById('chatTitle').innerHTML = newChat.name;
-        showMessages(newChat);
+        renderMessages(newChat);
     }
 
+    // ОТПРАВКА СООБЩЕНИЯ
     function sendMessage(chatId, text) {
         let chat = allChats.find(c => c.id === chatId);
         if(chat) {
             chat.messages.push({ text: text, sender: currentUser.name, time: new Date().toLocaleTimeString() });
-            saveData();
-            if(activeChatId === chatId) showMessages(chat);
-            renderChatsList();
+            save();
+            if(activeChat === chatId) renderMessages(chat);
+            renderChats();
         }
     }
 
-    function showMessages(chat) {
+    // ОТОБРАЖЕНИЕ СООБЩЕНИЙ
+    function renderMessages(chat) {
         let container = document.getElementById('msgList');
-        if(!chat.messages || !chat.messages.length) {
+        if(!chat.messages || chat.messages.length === 0) {
             container.innerHTML = '<div style="color:#aaa; text-align:center; padding:20px;">💬 Нет сообщений</div>';
             return;
         }
@@ -441,7 +439,8 @@
         container.scrollTop = container.scrollHeight;
     }
 
-    function renderChatsList() {
+    // ОТОБРАЖЕНИЕ СПИСКА ЧАТОВ
+    function renderChats() {
         let container = document.getElementById('chatsContainer');
         if(!allChats.length) {
             container.innerHTML = '<div style="color:#aaa; text-align:center; padding:15px;">Нет чатов<br>Найдите друзей через поиск</div>';
@@ -452,28 +451,29 @@
             let chat = allChats[i];
             let div = document.createElement('div');
             div.className = 'chat-item';
-            if(activeChatId === chat.id) div.classList.add('active');
+            if(activeChat === chat.id) div.classList.add('active');
             div.innerHTML = '<div class="chat-name">' + chat.name + '</div><div style="font-size:9px; color:#b0a0d0;">🔒 Защищён</div>';
             div.onclick = (function(c) { return function() {
-                activeChatId = c.id;
+                activeChat = c.id;
                 document.getElementById('chatTitle').innerHTML = c.name;
-                showMessages(c);
-                renderChatsList();
+                renderMessages(c);
+                renderChats();
             }; })(chat);
             container.appendChild(div);
         }
     }
 
-    function createNewChannel() {
+    // СОЗДАНИЕ КАНАЛА
+    function createChannel() {
         let name = prompt('Название канала:');
         if(name && name.trim()) {
             allChats.push({ id: 'ch_' + Date.now(), name: name, type: 'channel', messages: [{ text: '✨ Канал "' + name + '" создан!', sender: 'system', time: new Date().toLocaleTimeString() }] });
-            saveData();
-            renderChatsList();
+            save();
+            renderChats();
         }
     }
 
-    // НАСТРОЙКИ И АВАТАР
+    // НАСТРОЙКИ
     function openSettings() {
         let modal = document.createElement('div');
         modal.className = 'modal';
@@ -482,14 +482,14 @@
         for(let i = 0; i < emojis.length; i++) emojiHtml += '<span data-emoji="' + emojis[i] + '">' + emojis[i] + '</span>';
         modal.innerHTML = `
             <div class="modal-box">
-                <h3 style="color:white; margin-bottom:10px;">⚙️ Настройки</h3>
-                <div class="avatar-preview" id="modalAvatar">${currentUser.avatar}</div>
+                <h3 style="color:white;">⚙️ Настройки</h3>
+                <div class="avatar-preview" id="settingsAvatar">${currentUser.avatar}</div>
                 <div class="avatar-emojis" id="emojiPicker">${emojiHtml}</div>
                 <input type="text" id="editName" value="${currentUser.name}" placeholder="Имя">
                 <input type="tel" id="editPhone" value="${currentUser.phone}" placeholder="Телефон">
-                <div id="modalMsg" style="color:#88ff88; font-size:11px; margin-top:8px;"></div>
-                <button id="saveChanges">💾 Сохранить</button>
-                <button id="closeModal" style="background:#5a4a7a; margin-top:8px;">Закрыть</button>
+                <div id="settingsMsg" style="color:#88ff88; font-size:11px; margin-top:8px;"></div>
+                <button id="saveSettings">💾 Сохранить</button>
+                <button id="closeSettings" style="background:#5a4a7a;">Закрыть</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -497,35 +497,36 @@
         document.querySelectorAll('#emojiPicker span').forEach(span => {
             span.onclick = function() {
                 currentUser.avatar = this.getAttribute('data-emoji');
-                document.getElementById('modalAvatar').innerHTML = currentUser.avatar;
+                document.getElementById('settingsAvatar').innerHTML = currentUser.avatar;
                 document.getElementById('userAvatar').innerHTML = currentUser.avatar;
-                saveData();
-                document.getElementById('modalMsg').innerText = '✅ Аватар изменён';
+                save();
+                document.getElementById('settingsMsg').innerText = '✅ Аватар изменён';
             };
         });
         
-        document.getElementById('saveChanges').onclick = () => {
+        document.getElementById('saveSettings').onclick = () => {
             let newName = document.getElementById('editName').value.trim();
             let newPhone = document.getElementById('editPhone').value.trim();
             if(newName) currentUser.name = newName;
             if(newPhone) currentUser.phone = newPhone;
-            saveData();
+            save();
             document.getElementById('userName').innerHTML = currentUser.name;
             document.getElementById('userPhone').innerHTML = '📞 ' + currentUser.phone;
-            document.getElementById('modalMsg').innerText = '✅ Сохранено!';
+            document.getElementById('settingsMsg').innerText = '✅ Сохранено!';
             setTimeout(() => modal.remove(), 1000);
         };
-        document.getElementById('closeModal').onclick = () => modal.remove();
+        document.getElementById('closeSettings').onclick = () => modal.remove();
     }
 
-    function showChatInterface() {
+    // ЗАПУСК ЧАТА
+    function startChat() {
         document.getElementById('authPage').style.display = 'none';
         document.getElementById('chatPage').style.display = 'block';
         document.getElementById('userName').innerHTML = currentUser.name;
         document.getElementById('userPhone').innerHTML = '📞 ' + currentUser.phone;
         document.getElementById('userAvatar').innerHTML = currentUser.avatar;
-        loadPeople();
-        renderChatsList();
+        loadAllUsers();
+        renderChats();
         
         // Поиск
         let searchInput = document.getElementById('searchUser');
@@ -536,70 +537,73 @@
                 resultsDiv.style.display = 'block';
                 resultsDiv.innerHTML = '';
                 for(let i = 0; i < results.length; i++) {
-                    let p = results[i];
+                    let u = results[i];
                     let div = document.createElement('div');
                     div.className = 'search-item';
-                    div.innerHTML = '<span>' + (p.avatar || '👤') + ' ' + p.name + '<br><span style="font-size:9px;">📞 ' + p.phone + '</span></span><button style="width:auto; padding:4px 10px;">💬</button>';
-                    div.querySelector('button').onclick = (e) => { e.stopPropagation(); startPrivateChat(p); searchInput.value = ''; resultsDiv.style.display = 'none'; };
+                    div.innerHTML = '<span>' + (u.avatar || '👤') + ' ' + u.name + '<br><span style="font-size:9px;">📞 ' + u.phone + '</span></span><button style="width:auto; padding:4px 10px;">💬</button>';
+                    div.querySelector('button').onclick = (e) => { e.stopPropagation(); createPrivateChat(u); searchInput.value = ''; resultsDiv.style.display = 'none'; };
                     resultsDiv.appendChild(div);
                 }
             } else { resultsDiv.style.display = 'none'; }
         };
         
         if(allChats.length) {
-            activeChatId = allChats[0].id;
+            activeChat = allChats[0].id;
             document.getElementById('chatTitle').innerHTML = allChats[0].name;
-            showMessages(allChats[0]);
+            renderMessages(allChats[0]);
         }
     }
 
-    // ОБРАБОТЧИКИ
-    document.getElementById('loginButton').onclick = function() {
+    // ========== ОБРАБОТЧИКИ КНОПОК ==========
+    document.getElementById('loginBtn').onclick = () => {
         let id = document.getElementById('loginId').value.trim();
         let pass = document.getElementById('loginPass').value.trim();
         let msgDiv = document.getElementById('loginMsg');
         if(!id || !pass) { msgDiv.classList.remove('hidden'); msgDiv.className = 'msg error'; msgDiv.innerText = 'Заполните поля!'; return; }
-        if(loginUser(id, pass)) { showChatInterface(); }
+        if(login(id, pass)) { startChat(); }
         else { msgDiv.classList.remove('hidden'); msgDiv.className = 'msg error'; msgDiv.innerText = 'Неверные данные!'; }
     };
 
-    document.getElementById('regButton').onclick = function() {
+    document.getElementById('regBtn').onclick = () => {
         let name = document.getElementById('regName').value.trim();
         let phone = document.getElementById('regPhone').value.trim();
         let email = document.getElementById('regEmail').value.trim();
         let pass = document.getElementById('regPass').value.trim();
         let msgDiv = document.getElementById('regMsg');
-        let res = registerUser(name, phone, email, pass);
+        let res = register(name, phone, email, pass);
         if(res === 'ok') {
             msgDiv.classList.remove('hidden'); msgDiv.className = 'msg success'; msgDiv.innerText = '✅ Аккаунт создан!';
-            setTimeout(() => showChatInterface(), 1500);
+            setTimeout(() => startChat(), 1500);
         } else {
             msgDiv.classList.remove('hidden'); msgDiv.className = 'msg error'; msgDiv.innerText = res;
         }
     };
 
-    document.getElementById('toRegButton').onclick = function() {
+    document.getElementById('toRegBtn').onclick = () => {
         document.getElementById('loginPanel').classList.add('hidden');
         document.getElementById('regPanel').classList.remove('hidden');
     };
-    document.getElementById('toLoginButton').onclick = function() {
+    document.getElementById('toLoginBtn').onclick = () => {
         document.getElementById('regPanel').classList.add('hidden');
         document.getElementById('loginPanel').classList.remove('hidden');
     };
 
-    document.getElementById('sendMsg').onclick = function() {
+    document.getElementById('sendMsgBtn').onclick = () => {
         let input = document.getElementById('msgField');
-        if(activeChatId && input.value.trim()) {
-            sendMessage(activeChatId, input.value.trim());
+        if(activeChat && input.value.trim()) {
+            sendMessage(activeChat, input.value.trim());
             input.value = '';
         }
     };
-    document.getElementById('msgField').addEventListener('keypress', (e) => { if(e.key === 'Enter') document.getElementById('sendMsg').click(); });
-    document.getElementById('newChannel').onclick = createNewChannel;
-    document.getElementById('callNow').onclick = function() { if(activeChatId) { alert('📞 Защищённый звонок!'); sendMessage(activeChatId, '🔊 Аудиозвонок'); } else alert('Выберите чат'); };
-    document.getElementById('sendGift').onclick = function() { if(activeChatId) { let gifts = ['🌹 Роза', '🎂 Торт', '💖 Сердце', '⭐ Звезда', '👑 Корона']; let c = prompt('Подарок:\n1-🌹 2-🎂 3-💖 4-⭐ 5-👑'); if(c>=1 && c<=5) sendMessage(activeChatId, '🎁 Подарок: ' + gifts[c-1] + ' от ' + currentUser.name); } else alert('Выберите чат'); };
+    document.getElementById('msgField').addEventListener('keypress', (e) => { if(e.key === 'Enter') document.getElementById('sendMsgBtn').click(); });
+    
+    document.getElementById('newChannelBtn').onclick = createChannel;
+    document.getElementById('callBtn').onclick = () => { if(activeChat) { alert('📞 Защищённый звонок!'); sendMessage(activeChat, '🔊 Аудиозвонок'); } else alert('Выберите чат'); };
+    document.getElementById('giftBtn').onclick = () => { if(activeChat) { let gifts = ['🌹 Роза', '🎂 Торт', '💖 Сердце', '⭐ Звезда', '👑 Корона']; let c = prompt('Подарок:\n1-🌹 2-🎂 3-💖 4-⭐ 5-👑'); if(c>=1 && c<=5) sendMessage(activeChat, '🎁 Подарок: ' + gifts[c-1] + ' от ' + currentUser.name); } else alert('Выберите чат'); };
+    
     document.getElementById('profileClick').onclick = openSettings;
-    document.getElementById('exitButton').onclick = function() {
+    
+    document.getElementById('exitBtn').onclick = () => {
         currentUser = null;
         document.getElementById('chatPage').style.display = 'none';
         document.getElementById('authPage').style.display = 'block';
