@@ -96,7 +96,7 @@
             animation: rainbow 2s infinite;
         }
         .sidebar {
-            width: 260px;
+            width: 280px;
             background: rgba(20, 10, 35, 0.9);
             display: flex;
             flex-direction: column;
@@ -121,33 +121,35 @@
         }
         .profile-name { color: white; font-weight: bold; font-size: 14px; }
         .profile-phone { color: #b0a0d0; font-size: 10px; }
-        .search-box {
-            margin: 10px;
-            padding: 8px 12px;
-            background: #2a1a3e;
-            border: 1px solid #ff77aa;
-            border-radius: 25px;
-            color: white;
+        
+        .users-section {
+            padding: 10px;
+            border-bottom: 1px solid #ff77aa;
         }
-        .search-results {
+        .users-title {
+            color: #ffaa88;
+            font-size: 11px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .users-list {
             max-height: 150px;
             overflow-y: auto;
-            margin: 0 10px 10px;
-            background: #1a0b2e;
-            border-radius: 15px;
-            display: none;
         }
-        .search-item {
+        .user-item {
             padding: 8px;
-            border-bottom: 1px solid #ff77aa;
+            background: #2a1a3e;
+            border-radius: 20px;
+            margin-bottom: 6px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
             font-size: 12px;
+            color: white;
         }
-        .search-item:hover { background: #ff77aa30; }
+        .user-item:hover { background: #ff77aa30; }
+        
         .chats-area {
             flex: 1;
             overflow-y: auto;
@@ -231,7 +233,7 @@
         }
         .avatar-emojis { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
         .avatar-emojis span { font-size: 28px; cursor: pointer; padding: 5px; background: #1a0b2e; border-radius: 50%; }
-        @media (max-width: 600px) { .sidebar { width: 200px; } }
+        @media (max-width: 600px) { .sidebar { width: 220px; } }
     </style>
 </head>
 <body>
@@ -265,8 +267,13 @@
                 <div class="profile-name" id="userName"></div>
                 <div class="profile-phone" id="userPhone"></div>
             </div>
-            <input type="text" id="searchUser" class="search-box" placeholder="🔍 Найти пользователя...">
-            <div id="searchResult" class="search-results"></div>
+            
+            <!-- СПИСОК ВСЕХ ПОЛЬЗОВАТЕЛЕЙ -->
+            <div class="users-section">
+                <div class="users-title">👥 ВСЕ ПОЛЬЗОВАТЕЛИ (нажми для чата)</div>
+                <div class="users-list" id="allUsersList"></div>
+            </div>
+            
             <div class="chats-area" id="chatsContainer"></div>
             <div class="small-btns">
                 <button id="newChannelBtn">📢 Канал</button>
@@ -307,7 +314,24 @@
                 } catch(e) {}
             }
         }
-        console.log('Найдено пользователей:', allUsers.length, allUsers);
+        renderUsersList();
+    }
+
+    function renderUsersList() {
+        let container = document.getElementById('allUsersList');
+        if(!allUsers.length) {
+            container.innerHTML = '<div style="color:#aaa; text-align:center; padding:10px;">Нет других пользователей</div>';
+            return;
+        }
+        container.innerHTML = '';
+        for(let i = 0; i < allUsers.length; i++) {
+            let u = allUsers[i];
+            let div = document.createElement('div');
+            div.className = 'user-item';
+            div.innerHTML = '<span>' + (u.avatar || '👤') + ' ' + u.name + '<br><span style="font-size:9px;">📞 ' + u.phone + '</span></span><button style="width:auto; padding:4px 10px;">💬</button>';
+            div.querySelector('button').onclick = (e) => { e.stopPropagation(); startPrivateChat(u); };
+            container.appendChild(div);
+        }
     }
 
     function register(name, phone, email, pass) {
@@ -345,13 +369,7 @@
         return false;
     }
 
-    function findUsers(query) {
-        if(!query.trim()) return [];
-        let q = query.toLowerCase();
-        return allUsers.filter(u => u.name.toLowerCase().includes(q) || u.phone.includes(q) || u.email.toLowerCase().includes(q));
-    }
-
-    function createPrivateChat(other) {
+    function startPrivateChat(other) {
         let existing = allChats.find(c => c.type === 'private' && c.participants && c.participants.includes(currentUser.id) && c.participants.includes(other.id));
         if(existing) {
             activeChat = existing.id;
@@ -406,7 +424,7 @@
     function renderChats() {
         let container = document.getElementById('chatsContainer');
         if(!allChats.length) {
-            container.innerHTML = '<div style="color:#aaa; text-align:center; padding:15px;">Нет чатов<br>Найдите друзей через поиск</div>';
+            container.innerHTML = '<div style="color:#aaa; text-align:center; padding:15px;">Нет чатов</div>';
             return;
         }
         container.innerHTML = '';
@@ -485,25 +503,6 @@
         document.getElementById('userAvatar').innerHTML = currentUser.avatar;
         loadAllUsers();
         renderChats();
-        
-        let searchInput = document.getElementById('searchUser');
-        let resultsDiv = document.getElementById('searchResult');
-        searchInput.oninput = function() {
-            let results = findUsers(this.value);
-            console.log('Поиск:', this.value, 'Найдено:', results.length);
-            if(results.length && this.value.trim()) {
-                resultsDiv.style.display = 'block';
-                resultsDiv.innerHTML = '';
-                for(let i = 0; i < results.length; i++) {
-                    let u = results[i];
-                    let div = document.createElement('div');
-                    div.className = 'search-item';
-                    div.innerHTML = '<span>' + (u.avatar || '👤') + ' ' + u.name + '<br><span style="font-size:9px;">📞 ' + u.phone + '</span></span><button style="width:auto; padding:4px 10px;">💬</button>';
-                    div.querySelector('button').onclick = (e) => { e.stopPropagation(); createPrivateChat(u); searchInput.value = ''; resultsDiv.style.display = 'none'; };
-                    resultsDiv.appendChild(div);
-                }
-            } else { resultsDiv.style.display = 'none'; }
-        };
         if(allChats.length) {
             activeChat = allChats[0].id;
             document.getElementById('chatTitle').innerHTML = allChats[0].name;
@@ -511,6 +510,7 @@
         }
     }
 
+    // ОБРАБОТЧИКИ
     document.getElementById('loginBtn').onclick = () => {
         let id = document.getElementById('loginId').value.trim();
         let pass = document.getElementById('loginPass').value.trim();
